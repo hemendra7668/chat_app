@@ -8,6 +8,7 @@ import 'firebase_options.dart';
 // ...
 
 void main() async {
+  WidgetsFlutterBinding();
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
@@ -40,20 +41,4 @@ class MyApp extends StatelessWidget {
   }
 }
 
-class MainPage extends StatelessWidget {
-  const MainPage({super.key});
 
-  @override
-  Widget build(BuildContext context) {
-    return StreamBuilder(
-      stream: FirebaseAuth.instance.authStateChanges(),
-      builder: (context, snapshot) {
-        if (snapshot.hasData) {
-          return Home();
-        } else {
-          return Register();
-        }
-      },
-    );
-  }
-}
