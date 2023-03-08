@@ -7,6 +7,7 @@ import 'firebase_options.dart';
 // ...
 
 void main() async {
+  WidgetsFlutterBinding();
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
@@ -37,5 +38,3 @@ class MyApp extends StatelessWidget {
     );
   }
 }
-
-
