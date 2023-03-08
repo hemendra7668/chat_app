@@ -11,32 +11,44 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
+  TextEditingController name = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text("hehfd"),
-        actions: [
-          IconButton(
-            icon: Icon(Icons.logout_outlined),
-            onPressed: () {
-              FirebaseAuth.instance.signOut();
-            },
-          )
-        ],
-      ),
-      body: const Center(
-        // Center is a layout widget. It takes a single child and positions it
-        // in the middle of the parent.
-        child: Text(
-          'You have pushed the button this many times:',
+        appBar: AppBar(
+          title: Text("Chat App"),
+          actions: [
+            IconButton(
+              icon: Icon(Icons.logout_outlined),
+              onPressed: () {
+                FirebaseAuth.instance.signOut();
+              },
+            )
+          ],
         ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {},
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
-    );
+        body: Container(
+          child: Column(
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(10.0),
+                child: TextFormField(
+                    controller: name,
+                    decoration: InputDecoration(
+                        contentPadding: const EdgeInsets.symmetric(
+                            vertical: 15.0, horizontal: 15.0),
+                        filled: true,
+                        fillColor: Colors.white,
+                        hintText: "Search Name or Post ",
+                        labelText: "Search...",
+                        border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(30.0),
+                            borderSide: const BorderSide(width: 0.5)),
+                        suffixIcon: IconButton(
+                            onPressed: () {},
+                            icon: Icon(Icons.search_rounded)))),
+              )
+            ],
+          ),
+        ));
   }
 }
