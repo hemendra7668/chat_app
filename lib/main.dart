@@ -1,6 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'firebase_options.dart';
+// <<<<<<< HEAD
 import 'package:firebase_messaging/firebase_messaging.dart';
 void main() {
+// =======
+
+
+// ...
+
+void main() async {
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
+// >>>>>>> ba11a70e82051415148db9936fccab4409448fb8
   runApp(const MyApp());
 }
 
