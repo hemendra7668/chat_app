@@ -1,3 +1,4 @@
+import 'package:chat_app/Chatroom.dart';
 import 'package:chat_app/auth/register.dart';
 import 'package:chat_app/home.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -36,7 +37,7 @@ class MyApp extends StatelessWidget {
         // is not restarted.
         primarySwatch: Colors.blue,
       ),
-      home: MainPage(),
+      home: Chatroom(),
     );
   }
 }
@@ -52,7 +53,7 @@ class MainPage extends StatelessWidget {
         if (snapshot.hasData) {
           return Home();
         } else {
-          return Register();
+          return Chatroom();
         }
       },
     );
