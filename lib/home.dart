@@ -1,3 +1,5 @@
+import 'package:chat_app/Chatroom.dart';
+import 'package:chat_app/model/ChatRoomModel.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -69,8 +71,18 @@ class _HomeState extends State<Home> {
                               .data() as Map<String, dynamic>;
                           UserModel searcheduser = UserModel.fromMap(usermap);
                           return ListTile(
-                            // title: Text(searcheduser.fullname!),
+                            title: Text(searcheduser.name!),
+                            // title: Text(searcheduser.uid!),
                             subtitle: Text(searcheduser.email!),
+                            trailing: IconButton(
+                                onPressed: () {
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => Chatroom(),
+                                      ));
+                                },
+                                icon: Icon(Icons.message_rounded)),
                           );
                         } else {
                           return Text("No Result Found");

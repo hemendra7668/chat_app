@@ -37,7 +37,7 @@ class MyApp extends StatelessWidget {
         // is not restarted.
         primarySwatch: Colors.blue,
       ),
-      home: Chatroom(),
+      home: MainPage(),
     );
   }
 }
@@ -53,7 +53,7 @@ class MainPage extends StatelessWidget {
         if (snapshot.hasData) {
           return Home();
         } else {
-          return Chatroom();
+          return Register();
         }
       },
     );
