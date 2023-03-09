@@ -1,13 +1,28 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
-class Chatroom extends StatefulWidget {
-  const Chatroom({super.key});
+import 'package:chat_app/model/ChatRoomModel.dart';
+import 'package:chat_app/model/UserModel.dart';
 
+class Chatroom extends StatefulWidget {
+  const Chatroom({
+    Key? key,
+    required this.crm,
+    required this.userm,
+    required this.targetuser,
+    required this.firebaseuser,
+  }) : super(key: key);
+  final ChatRoomModel crm;
+  final UserModel userm;
+  final UserModel targetuser;
+  final User firebaseuser;
   @override
   State<Chatroom> createState() => _ChatroomState();
 }
 
 class _ChatroomState extends State<Chatroom> {
+
   TextEditingController msgcontrol = TextEditingController();
   bool _isTextFilled = false;
   @override
