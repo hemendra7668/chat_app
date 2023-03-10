@@ -27,11 +27,30 @@ class Login extends StatelessWidget {
             ),
             ElevatedButton(
                 onPressed: () async {
-                  var users = await FirebaseAuth.instance
-                      .signInWithEmailAndPassword(
-                          email: emailcontrol.text, password: passcontrol.text)
-                      .then((value) => Navigator.push(context,
-                          MaterialPageRoute(builder: (context) => Home())));
+                  try {
+                    var users = await FirebaseAuth.instance
+                        .signInWithEmailAndPassword(
+                            email: emailcontrol.text,
+                            password: passcontrol.text)
+                        .then((value) => Navigator.push(context,
+                            MaterialPageRoute(builder: (context) => Home())));
+                  } on FirebaseException catch (ex) {
+                    // Text("no user, found please register");
+                    // ShowAlertDialog(context, "An error occured", ex.message.toString());
+
+                    ScaffoldMessenger.of(context).showMaterialBanner(
+                        MaterialBanner(
+                            content: Text("no user found"),
+                            actions: [
+                          TextButton(
+                              onPressed: () {
+                                ScaffoldMessenger.of(context)
+                                    .hideCurrentMaterialBanner();
+                                Navigator.pop(context);
+                              },
+                              child: Text("ok"))
+                        ]));
+                  }
                 },
                 child: Text("login"))
           ],
