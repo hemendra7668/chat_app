@@ -38,12 +38,13 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
   TextEditingController name = TextEditingController();
   ChatRoomModel? chatroom;
+  UserModel? cUser;
 
   Future<ChatRoomModel?> getChatroomModel(UserModel targetuser) async {
     QuerySnapshot querysnap = await FirebaseFirestore.instance
         .collection("chatrooms")
         .where("participants.${currentUser!.uid}", isEqualTo: true)
-        .where("partcipants.${targetuser.uid}", isEqualTo: true)
+        .where("participants.${targetuser.uid}", isEqualTo: true)
         .get();
     if (querysnap.docs.length > 0) {
       var docdata = querysnap.docs[0].data();
@@ -64,6 +65,21 @@ class _HomeState extends State<Home> {
       chatroom = newchatroom;
     }
     return chatroom;
+  }
+
+  fetchCurUserData() async {
+    UserModel? temp = await FirebaseHelper.getUserModelById(
+        FirebaseAuth.instance.currentUser!.uid);
+
+    setState(() {
+      cUser = temp;
+    });
+  }
+
+  @override
+  void initState() {
+    fetchCurUserData();
+    super.initState();
   }
 
   @override
@@ -141,7 +157,7 @@ class _HomeState extends State<Home> {
                                           builder: (context) => Chatroom(
                                             targetuser: searcheduser,
                                             firebaseuser: currentUser!,
-                                            // userm: nuserModel!,
+                                            userm: cUser!,
                                             chatroomod: chatroom,
                                           ),
                                         ));

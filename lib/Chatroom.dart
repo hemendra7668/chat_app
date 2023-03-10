@@ -16,12 +16,14 @@ class Chatroom extends StatefulWidget {
   final UserModel targetuser;
   final ChatRoomModel chatroomod;
   final User firebaseuser;
+  final UserModel userm;
 // final UserModel
   const Chatroom({
     Key? key,
     required this.targetuser,
     required this.chatroomod,
     required this.firebaseuser,
+    required this.userm,
   }) : super(key: key);
 
   @override
@@ -60,8 +62,8 @@ class _ChatroomState extends State<Chatroom> {
           child: SingleChildScrollView(
         child: Column(
           children: [
-            // Text(targetuser.uid.toString()),
-
+            Text("${widget.userm}"),
+            Text("${widget.targetuser}"),
             Container(
               color: Color.fromARGB(255, 203, 200, 190),
               height: 60.0,
