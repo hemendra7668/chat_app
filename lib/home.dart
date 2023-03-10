@@ -88,28 +88,34 @@ class _HomeState extends State<Home> {
               Padding(
                 padding: const EdgeInsets.all(10.0),
                 child: TextFormField(
-                    controller: name,
-                    decoration: InputDecoration(
-                        contentPadding: const EdgeInsets.symmetric(
-                            vertical: 15.0, horizontal: 15.0),
-                        filled: true,
-                        fillColor: Colors.white,
-                        hintText: "Search Name or Post ",
-                        labelText: "Search...",
-                        border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(30.0),
-                            borderSide: const BorderSide(width: 0.5)),
-                        suffixIcon: IconButton(
-                            onPressed: () {
-                              setState(() {});
-                            },
-                            icon: Icon(Icons.search_rounded)))),
+                  controller: name,
+                  decoration: InputDecoration(
+                      contentPadding: const EdgeInsets.symmetric(
+                          vertical: 15.0, horizontal: 15.0),
+                      filled: true,
+                      fillColor: Colors.white,
+                      hintText: "Search Name or Post ",
+                      labelText: "Search...",
+                      border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(30.0),
+                          borderSide: const BorderSide(width: 0.5)),
+                      suffixIcon: IconButton(
+                          onPressed: () {
+                            setState(() {
+                              name = name;
+                            });
+                          },
+                          icon: Icon(Icons.search_rounded))),
+                  onChanged: (value) {
+                    setState(() {});
+                  },
+                ),
               ),
               Container(
                 child: StreamBuilder(
                   stream: FirebaseFirestore.instance
                       .collection("users")
-                      .where("email", isEqualTo: name.text)
+                      .where("email", isGreaterThanOrEqualTo: name.text)
                       // .where("email", isNotEqualTo: Widget.Usermode.email)
                       .snapshots(),
                   builder: (context, snapshot) {
