@@ -43,7 +43,7 @@ class _HomeState extends State<Home> {
     QuerySnapshot querysnap = await FirebaseFirestore.instance
         .collection("chatrooms")
         .where("participants.${currentUser!.uid}", isEqualTo: true)
-        .where("partcipants.${targetuser.uid}", isEqualTo: true)
+        .where("participants.${targetuser.uid}", isEqualTo: true)
         .get();
     if (querysnap.docs.length > 0) {
       var docdata = querysnap.docs[0].data();
