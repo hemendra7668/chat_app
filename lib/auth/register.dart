@@ -70,7 +70,7 @@ class _RegisterState extends State<Register> {
                                   .doc(value.user!.uid)
                                   .set({
                                 "uid": value.user!.uid,
-                                "name": namecontrol.text,
+                                "name": value.user!.displayName,
                                 "email": value.user!.email
                               }));
                     } catch (e) {

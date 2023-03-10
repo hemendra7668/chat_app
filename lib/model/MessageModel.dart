@@ -2,13 +2,13 @@
 import 'dart:convert';
 
 class MessageModel {
-  String? Messageid;
+  String? messageid;
   String? sender;
   String? text;
   String? createdon;
   bool? seen;
   MessageModel({
-    this.Messageid,
+    this.messageid,
     this.sender,
     this.text,
     this.createdon,
@@ -16,14 +16,14 @@ class MessageModel {
   });
 
   MessageModel copyWith({
-    String? Messageid,
+    String? messageid,
     String? sender,
     String? text,
     String? createdon,
     bool? seen,
   }) {
     return MessageModel(
-      Messageid: Messageid ?? this.Messageid,
+      messageid: messageid ?? this.messageid,
       sender: sender ?? this.sender,
       text: text ?? this.text,
       createdon: createdon ?? this.createdon,
@@ -33,7 +33,7 @@ class MessageModel {
 
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
-      'Messageid': Messageid,
+      'messageid': messageid,
       'sender': sender,
       'text': text,
       'createdon': createdon,
@@ -43,7 +43,7 @@ class MessageModel {
 
   factory MessageModel.fromMap(Map<String, dynamic> map) {
     return MessageModel(
-      Messageid: map['Messageid'] != null ? map['Messageid'] as String : null,
+      messageid: map['messageid'] != null ? map['messageid'] as String : null,
       sender: map['sender'] != null ? map['sender'] as String : null,
       text: map['text'] != null ? map['text'] as String : null,
       createdon: map['createdon'] != null ? map['createdon'] as String : null,
@@ -53,31 +53,31 @@ class MessageModel {
 
   String toJson() => json.encode(toMap());
 
-  factory MessageModel.fromJson(String source) => MessageModel.fromMap(json.decode(source) as Map<String, dynamic>);
+  factory MessageModel.fromJson(String source) =>
+      MessageModel.fromMap(json.decode(source) as Map<String, dynamic>);
 
   @override
   String toString() {
-    return 'MessageModel(Messageid: $Messageid, sender: $sender, text: $text, createdon: $createdon, seen: $seen)';
+    return 'MessageModel(messageid: $messageid, sender: $sender, text: $text, createdon: $createdon, seen: $seen)';
   }
 
   @override
   bool operator ==(covariant MessageModel other) {
     if (identical(this, other)) return true;
-  
-    return 
-      other.Messageid == Messageid &&
-      other.sender == sender &&
-      other.text == text &&
-      other.createdon == createdon &&
-      other.seen == seen;
+
+    return other.messageid == messageid &&
+        other.sender == sender &&
+        other.text == text &&
+        other.createdon == createdon &&
+        other.seen == seen;
   }
 
   @override
   int get hashCode {
-    return Messageid.hashCode ^
-      sender.hashCode ^
-      text.hashCode ^
-      createdon.hashCode ^
-      seen.hashCode;
+    return messageid.hashCode ^
+        sender.hashCode ^
+        text.hashCode ^
+        createdon.hashCode ^
+        seen.hashCode;
   }
 }

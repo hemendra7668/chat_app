@@ -4,10 +4,11 @@ import 'package:chat_app/home.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:uuid/uuid.dart';
 import 'firebase_options.dart';
 
 // ...
-
+var uuid = Uuid();
 void main() async {
   WidgetsFlutterBinding();
   await Firebase.initializeApp(

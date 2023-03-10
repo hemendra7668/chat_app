@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:chat_app/Chatroom.dart';
+import 'package:chat_app/main.dart';
 import 'package:chat_app/model/ChatRoomModel.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -19,8 +20,25 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   User? currentUser = FirebaseAuth.instance.currentUser;
-  // UserModel? thisUserModel = await FirebaseHelper.getUserModelById(currentUser.uid);
+  UserModel? nuserModel;
+  // DocumentSnapshot docSnap = await FirebaseFirestore.instance.collection("users").doc(currentUser?.uid).get();
+  // UserModel? nuserModel = UserModel.fromMap(docSnap.data() as Map<String, dynamic>);
+  Future<UserModel?> getUserModelById(String uid) async {
+    DocumentSnapshot docSnap = await FirebaseFirestore.instance
+        .collection("users")
+        .doc(currentUser?.uid)
+        .get();
+
+    if (docSnap.data() != null) {
+      UserModel? nuserModel =
+          UserModel.fromMap(docSnap.data() as Map<String, dynamic>);
+    }
+
+    return nuserModel;
+  }
+
   TextEditingController name = TextEditingController();
+  ChatRoomModel? anotherchatroom;
 
   Future<ChatRoomModel?> getChatroomModel(UserModel targetuser) async {
     QuerySnapshot querysnap = await FirebaseFirestore.instance
@@ -29,10 +47,24 @@ class _HomeState extends State<Home> {
         .where("partcipants.${targetuser.uid}", isEqualTo: true)
         .get();
     if (querysnap.docs.length > 0) {
-      log("chat already");
+      var docdata = querysnap.docs[0].data();
+      ChatRoomModel existing =
+          ChatRoomModel.fromMap(docdata as Map<String, dynamic>);
+      anotherchatroom = existing;
     } else {
-      log("message not");
+      ChatRoomModel newchatroom =
+          ChatRoomModel(chatroomid: uuid.v1(), lastmessage: "", participants: {
+        currentUser!.uid: true,
+        targetuser.uid!: true,
+      });
+      await FirebaseFirestore.instance
+          .collection("chatroom")
+          .doc(newchatroom.chatroomid)
+          .set(newchatroom.toMap());
+      log("chatroom created");
+      anotherchatroom = newchatroom;
     }
+    return anotherchatroom;
   }
 
   @override
@@ -98,11 +130,22 @@ class _HomeState extends State<Home> {
                                 onPressed: () async {
                                   ChatRoomModel? chatroom =
                                       await getChatroomModel(searcheduser);
-                                  // Navigator.push(
-                                  //     context,
-                                  //     MaterialPageRoute(
-                                  //       builder: (context) => Chatroom(),
-                                  //     ));
+                                  if (chatroom != null) {
+                                    log(searcheduser.name.toString());
+                                    log(chatroom.participants.toString());
+                                    log(currentUser.toString());
+                                    // ignore: use_build_context_synchronously
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) => Chatroom(
+                                            targetuser: searcheduser,
+                                            firebaseuser: currentUser!,
+                                            userm: nuserModel!,
+                                            crm: chatroom,
+                                          ),
+                                        ));
+                                  }
                                 },
                                 icon: Icon(Icons.message_rounded)),
                           );
