@@ -2,11 +2,13 @@
 import 'dart:convert';
 
 class MessageModel {
+  String? Messageid;
   String? sender;
   String? text;
   String? createdon;
   bool? seen;
   MessageModel({
+    this.Messageid,
     this.sender,
     this.text,
     this.createdon,
@@ -14,12 +16,14 @@ class MessageModel {
   });
 
   MessageModel copyWith({
+    String? Messageid,
     String? sender,
     String? text,
     String? createdon,
     bool? seen,
   }) {
     return MessageModel(
+      Messageid: Messageid ?? this.Messageid,
       sender: sender ?? this.sender,
       text: text ?? this.text,
       createdon: createdon ?? this.createdon,
@@ -29,6 +33,7 @@ class MessageModel {
 
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
+      'Messageid': Messageid,
       'sender': sender,
       'text': text,
       'createdon': createdon,
@@ -38,6 +43,7 @@ class MessageModel {
 
   factory MessageModel.fromMap(Map<String, dynamic> map) {
     return MessageModel(
+      Messageid: map['Messageid'] != null ? map['Messageid'] as String : null,
       sender: map['sender'] != null ? map['sender'] as String : null,
       text: map['text'] != null ? map['text'] as String : null,
       createdon: map['createdon'] != null ? map['createdon'] as String : null,
@@ -51,7 +57,7 @@ class MessageModel {
 
   @override
   String toString() {
-    return 'MessageModel(sender: $sender, text: $text, createdon: $createdon, seen: $seen)';
+    return 'MessageModel(Messageid: $Messageid, sender: $sender, text: $text, createdon: $createdon, seen: $seen)';
   }
 
   @override
@@ -59,6 +65,7 @@ class MessageModel {
     if (identical(this, other)) return true;
   
     return 
+      other.Messageid == Messageid &&
       other.sender == sender &&
       other.text == text &&
       other.createdon == createdon &&
@@ -67,7 +74,8 @@ class MessageModel {
 
   @override
   int get hashCode {
-    return sender.hashCode ^
+    return Messageid.hashCode ^
+      sender.hashCode ^
       text.hashCode ^
       createdon.hashCode ^
       seen.hashCode;

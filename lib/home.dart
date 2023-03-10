@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:chat_app/Chatroom.dart';
 import 'package:chat_app/model/ChatRoomModel.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -10,17 +12,34 @@ import 'model/UserModel.dart';
 
 class Home extends StatefulWidget {
   const Home({super.key});
-
+// final UserModel usermodel;
   @override
   State<Home> createState() => _HomeState();
 }
 
 class _HomeState extends State<Home> {
+  User? currentUser = FirebaseAuth.instance.currentUser;
+  // UserModel? thisUserModel = await FirebaseHelper.getUserModelById(currentUser.uid);
   TextEditingController name = TextEditingController();
+
+  Future<ChatRoomModel?> getChatroomModel(UserModel targetuser) async {
+    QuerySnapshot querysnap = await FirebaseFirestore.instance
+        .collection("chatrooms")
+        .where("participants.${currentUser!.uid}", isEqualTo: true)
+        .where("partcipants.${targetuser.uid}", isEqualTo: true)
+        .get();
+    if (querysnap.docs.length > 0) {
+      log("chat already");
+    } else {
+      log("message not");
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
+          centerTitle: true,
           automaticallyImplyLeading: false,
           title: Text("Chat App"),
           actions: [
@@ -60,6 +79,7 @@ class _HomeState extends State<Home> {
                   stream: FirebaseFirestore.instance
                       .collection("users")
                       .where("email", isEqualTo: name.text)
+                      // .where("email", isNotEqualTo: Widget.Usermode.email)
                       .snapshots(),
                   builder: (context, snapshot) {
                     if (snapshot.connectionState == ConnectionState.active) {
@@ -75,12 +95,14 @@ class _HomeState extends State<Home> {
                             // title: Text(searcheduser.uid!),
                             subtitle: Text(searcheduser.email!),
                             trailing: IconButton(
-                                onPressed: () {
-                                  Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) => Chatroom(),
-                                      ));
+                                onPressed: () async {
+                                  ChatRoomModel? chatroom =
+                                      await getChatroomModel(searcheduser);
+                                  // Navigator.push(
+                                  //     context,
+                                  //     MaterialPageRoute(
+                                  //       builder: (context) => Chatroom(),
+                                  //     ));
                                 },
                                 icon: Icon(Icons.message_rounded)),
                           );
