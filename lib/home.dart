@@ -11,6 +11,23 @@ import 'package:flutter/material.dart';
 
 import 'model/UserModel.dart';
 
+User? currentUser = FirebaseAuth.instance.currentUser;
+
+class FirebaseHelper {
+  static Future<UserModel?> getUserModelById(String uid) async {
+    UserModel? nuserMod;
+
+    DocumentSnapshot docSnap =
+        await FirebaseFirestore.instance.collection("users").doc(uid).get();
+
+    if (docSnap.data() != null) {
+      nuserMod = UserModel.fromMap(docSnap.data() as Map<String, dynamic>);
+    }
+
+    return nuserMod;
+  }
+}
+
 class Home extends StatefulWidget {
   const Home({super.key});
 // final UserModel usermodel;
@@ -19,26 +36,8 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-  User? currentUser = FirebaseAuth.instance.currentUser;
-  UserModel? nuserModel;
-  // DocumentSnapshot docSnap = await FirebaseFirestore.instance.collection("users").doc(currentUser?.uid).get();
-  // UserModel? nuserModel = UserModel.fromMap(docSnap.data() as Map<String, dynamic>);
-  Future<UserModel?> getUserModelById(String uid) async {
-    DocumentSnapshot docSnap = await FirebaseFirestore.instance
-        .collection("users")
-        .doc(currentUser?.uid)
-        .get();
-
-    if (docSnap.data() != null) {
-      UserModel? nuserModel =
-          UserModel.fromMap(docSnap.data() as Map<String, dynamic>);
-    }
-
-    return nuserModel;
-  }
-
   TextEditingController name = TextEditingController();
-  ChatRoomModel? anotherchatroom;
+  ChatRoomModel? chatroom;
 
   Future<ChatRoomModel?> getChatroomModel(UserModel targetuser) async {
     QuerySnapshot querysnap = await FirebaseFirestore.instance
@@ -50,7 +49,7 @@ class _HomeState extends State<Home> {
       var docdata = querysnap.docs[0].data();
       ChatRoomModel existing =
           ChatRoomModel.fromMap(docdata as Map<String, dynamic>);
-      anotherchatroom = existing;
+      chatroom = existing;
     } else {
       ChatRoomModel newchatroom =
           ChatRoomModel(chatroomid: uuid.v1(), lastmessage: "", participants: {
@@ -58,13 +57,13 @@ class _HomeState extends State<Home> {
         targetuser.uid!: true,
       });
       await FirebaseFirestore.instance
-          .collection("chatroom")
+          .collection("chatrooms")
           .doc(newchatroom.chatroomid)
           .set(newchatroom.toMap());
       log("chatroom created");
-      anotherchatroom = newchatroom;
+      chatroom = newchatroom;
     }
-    return anotherchatroom;
+    return chatroom;
   }
 
   @override
@@ -134,6 +133,7 @@ class _HomeState extends State<Home> {
                                     log(searcheduser.name.toString());
                                     log(chatroom.participants.toString());
                                     log(currentUser.toString());
+
                                     // ignore: use_build_context_synchronously
                                     Navigator.push(
                                         context,
@@ -141,8 +141,8 @@ class _HomeState extends State<Home> {
                                           builder: (context) => Chatroom(
                                             targetuser: searcheduser,
                                             firebaseuser: currentUser!,
-                                            userm: nuserModel!,
-                                            crm: chatroom,
+                                            // userm: nuserModel!,
+                                            chatroomod: chatroom,
                                           ),
                                         ));
                                   }

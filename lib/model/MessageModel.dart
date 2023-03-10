@@ -5,7 +5,7 @@ class MessageModel {
   String? messageid;
   String? sender;
   String? text;
-  String? createdon;
+  DateTime? createdon;
   bool? seen;
   MessageModel({
     this.messageid,
@@ -19,7 +19,7 @@ class MessageModel {
     String? messageid,
     String? sender,
     String? text,
-    String? createdon,
+    DateTime? createdon,
     bool? seen,
   }) {
     return MessageModel(
@@ -36,7 +36,7 @@ class MessageModel {
       'messageid': messageid,
       'sender': sender,
       'text': text,
-      'createdon': createdon,
+      'createdon': createdon?.millisecondsSinceEpoch,
       'seen': seen,
     };
   }
@@ -46,7 +46,7 @@ class MessageModel {
       messageid: map['messageid'] != null ? map['messageid'] as String : null,
       sender: map['sender'] != null ? map['sender'] as String : null,
       text: map['text'] != null ? map['text'] as String : null,
-      createdon: map['createdon'] != null ? map['createdon'] as String : null,
+      createdon: map['createdon'] != null ? DateTime.fromMillisecondsSinceEpoch(map['createdon'] as int) : null,
       seen: map['seen'] != null ? map['seen'] as bool : null,
     );
   }
