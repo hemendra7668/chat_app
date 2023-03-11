@@ -1,5 +1,6 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
-import 'dart:math';
+
+import 'dart:developer';
 
 import 'package:chat_app/main.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -33,77 +34,114 @@ class Chatroom extends StatefulWidget {
 class _ChatroomState extends State<Chatroom> {
   TextEditingController msgcontrol = TextEditingController();
   bool _isTextFilled = false;
+  @override
+  void initState() {
+    super.initState();
+    msgcontrol.addListener(() {
+      setState(() {
+        _isTextFilled = msgcontrol.text.isNotEmpty;
+      });
+    });
+  }
 
   void sendmessage() async {
     String msg = msgcontrol.text.trim();
+    msgcontrol.clear();
     if (msg != null) {
       MessageModel msgmod = MessageModel(
           messageid: uuid.v1(),
           text: msg,
           createdon: DateTime.now(),
-          sender: currentUser!.uid,
+          sender: widget.userm.uid,
           seen: false);
 
-// FirebaseFirestore.instance.collection("chatrooms").doc().
+      FirebaseFirestore.instance
+          .collection("chatrooms")
+          .doc(widget.chatroomod.chatroomid)
+          .collection("messages")
+          .doc(msgmod.messageid)
+          .set(msgmod.toMap());
+      print("message sent");
+      log("sent");
     } else {}
-  }
-
-  @override
-  void dispose() {
-    // TODO: implement dispose
-    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(),
+      appBar: AppBar(
+        title: Text("${widget.targetuser.name}"),
+      ),
       body: SafeArea(
           child: SingleChildScrollView(
         child: Column(
           children: [
-            Text("${widget.userm}"),
-            Text("${widget.targetuser}"),
-            Container(
-              color: Color.fromARGB(255, 203, 200, 190),
-              height: 60.0,
+            Expanded(
+              child: Container(
+                child: StreamBuilder(
+                  stream: FirebaseFirestore.instance
+                      .collection("chatrooms")
+                      .doc(widget.chatroomod.chatroomid)
+                      .collection("message")
+                      .snapshots(),
+                  // initialData: initialData,
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.active) {
+                      if (snapshot.hasData) {
+                        QuerySnapshot dataSnapshot =
+                            snapshot.data as QuerySnapshot;
+
+                        return ListView.builder(
+                          reverse: true,
+                          itemCount: dataSnapshot.docs.length,
+                          itemBuilder: (context, index) {
+                            MessageModel currentMessage = MessageModel.fromMap(
+                                dataSnapshot.docs[index].data()
+                                    as Map<String, dynamic>);
+
+                            return Row(
+                              mainAxisAlignment:
+                                  (currentMessage.sender == widget.userm.uid)
+                                      ? MainAxisAlignment.end
+                                      : MainAxisAlignment.start,
+                              children: [
+                                Container(
+                                  margin: EdgeInsets.symmetric(vertical: 2),
+                                  padding: EdgeInsets.symmetric(
+                                      vertical: 10, horizontal: 10),
+                                  decoration: BoxDecoration(
+                                    color: (currentMessage.sender ==
+                                            widget.userm.uid)
+                                        ? Colors.grey
+                                        : Theme.of(context)
+                                            .colorScheme
+                                            .secondary,
+                                    borderRadius: BorderRadius.circular(5),
+                                  ),
+                                  child: Text(
+                                    currentMessage.text.toString(),
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            );
+                          },
+                        );
+                      } else {
+                        return Text('No data available');
+                      }
+                    } else {
+                      return Center(child: CircularProgressIndicator());
+                    }
+                  },
+                ),
+              ),
             ),
-            Container(
-              color: Color.fromARGB(255, 216, 209, 188),
-              height: 60.0,
-            ),
-            Container(
-              color: Color.fromARGB(255, 141, 231, 85),
-              height: 60.0,
-            ),
-            Container(
-              color: Color.fromARGB(255, 141, 210, 149),
-              height: 60.0,
-            ),
-            Container(
-              color: Color.fromARGB(255, 169, 217, 190),
-              height: 60.0,
-            ),
-            Container(
-              color: Color.fromARGB(255, 162, 167, 240),
-              height: 60.0,
-            ),
-            Container(
-              color: Color.fromARGB(255, 230, 228, 224),
-              height: 60.0,
-            ),
-            Container(
-              color: Color.fromARGB(255, 191, 148, 240),
-              height: 60.0,
-            ),
-            Container(
-              color: Color.fromARGB(255, 220, 148, 198),
-              height: 60.0,
-            ),
-            Container(
-              color: Colors.amber,
-              height: 60.0,
-            ),
+
+            // Text("${widget.userm}"),
+            // Text("${widget.targetuser}"),
             Align(
               alignment: Alignment.bottomCenter,
               child: Container(
@@ -124,16 +162,25 @@ class _ChatroomState extends State<Chatroom> {
                         autocorrect: true,
                         controller: msgcontrol,
                         textAlign: TextAlign.start,
+                        validator: (value) {
+                          if (msgcontrol.text.length > 0) {
+                            setState(() {
+                              _isTextFilled = true;
+                            });
+                          }
+                        },
                         decoration: InputDecoration(
                           labelStyle: TextStyle(
                               color: Color.fromARGB(255, 81, 187, 104)),
                           labelText: "enter message",
                           suffixIcon: _isTextFilled
                               ? IconButton(
-                                  onPressed: () {},
+                                  onPressed: () {
+                                    sendmessage();
+                                  },
                                   icon: const Icon(
                                     Icons.send,
-                                    color: Colors.green,
+                                    color: Color.fromARGB(255, 83, 212, 88),
                                   ),
                                 )
                               : null,
