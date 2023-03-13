@@ -18,8 +18,8 @@ class _RegisterState extends State<Register> {
   Future<void> createuser(String uid, String email, String name) async {
     await db.collection("Users").doc(uid).set({
       "uid": uid,
-      "fullname": namecontrol,
-      "email": emailcontrol,
+      "fullname": namecontrol.text,
+      "email": emailcontrol.text,
     });
   }
 
