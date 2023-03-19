@@ -117,7 +117,7 @@ class _ChatroomState extends State<Chatroom> {
                                     decoration: BoxDecoration(
                                       color: (currentMessage.sender ==
                                               widget.userm.uid)
-                                          ? Colors.grey
+                                          ? Colors.green
                                           : Colors.amber,
                                       borderRadius: BorderRadius.circular(5),
                                     ),
@@ -179,7 +179,9 @@ class _ChatroomState extends State<Chatroom> {
                             suffixIcon: _isTextFilled
                                 ? IconButton(
                                     onPressed: () {
-                                      sendmessage();
+                                      setState(() {
+                                        sendmessage();
+                                      });
                                     },
                                     icon: const Icon(
                                       Icons.send,

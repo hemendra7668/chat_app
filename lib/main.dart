@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:chat_app/Chatroom.dart';
 import 'package:chat_app/auth/register.dart';
 import 'package:chat_app/home.dart';
@@ -6,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:uuid/uuid.dart';
 import 'firebase_options.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 
 // ...
 var uuid = Uuid();
@@ -14,6 +17,22 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+  final token = await FirebaseMessaging.instance.getToken();
+  // log(token!);
+  print(token);
+
+  FirebaseMessaging messaging = FirebaseMessaging.instance;
+
+  NotificationSettings settings = await messaging.requestPermission(
+    alert: true,
+    announcement: false,
+    badge: true,
+    carPlay: false,
+    criticalAlert: false,
+    provisional: false,
+    sound: true,
+  );
+  print('User granted permission: ${settings.authorizationStatus}');
   runApp(const MyApp());
 }
 
