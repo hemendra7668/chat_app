@@ -105,31 +105,6 @@ class _ChatroomState extends State<Chatroom> {
                             MessageModel currentMessage = MessageModel.fromMap(
                                 dataSnapshot.docs[index].data()
                                     as Map<String, dynamic>);
-
-
-                              return Row(
-                                mainAxisAlignment:
-                                    (currentMessage.sender == widget.userm.uid)
-                                        ? MainAxisAlignment.end
-                                        : MainAxisAlignment.start,
-                                children: [
-                                  Container(
-                                    margin: EdgeInsets.symmetric(vertical: 2),
-                                    padding: EdgeInsets.symmetric(
-                                        vertical: 10, horizontal: 10),
-                                    decoration: BoxDecoration(
-                                      color: (currentMessage.sender ==
-                                              widget.userm.uid)
-                                          ? Colors.green
-                                          : Colors.amber,
-                                      borderRadius: BorderRadius.circular(5),
-                                    ),
-                                    child: Text(
-                                      currentMessage.text.toString(),
-                                      style: TextStyle(
-                                        color: Color.fromARGB(255, 235, 43, 43),
-                                      ),
-
                             return Row(
                               mainAxisAlignment:
                                   (currentMessage.sender == widget.userm.uid)
