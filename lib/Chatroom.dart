@@ -85,25 +85,28 @@ class _ChatroomState extends State<Chatroom> {
                     stream: FirebaseFirestore.instance
                         .collection("chatrooms")
                         .doc(widget.chatroomod.chatroomid)
-                        .collection("message")
+                        .collection("messages")
+                        .orderBy("createdon", descending: true)
                         .snapshots(),
                     // initialData: initialData,
                     builder: (context, snapshot) {
-                      if (snapshot.connectionState == ConnectionState.active) {
-                        if (snapshot.hasData) {
-                          QuerySnapshot dataSnapshot =
-                              snapshot.data as QuerySnapshot;
+                      // if (snapshot.connectionState == ConnectionState.active) {
+                      if (snapshot.hasData) {
+                        log("${snapshot.data!.docs.length}");
+                        QuerySnapshot dataSnapshot =
+                            snapshot.data as QuerySnapshot;
 
-                          return ListView.builder(
-                            reverse: true,
-                            // shrinkWrap: true,
-                            physics: BouncingScrollPhysics(),
-                            itemCount: dataSnapshot.docs.length,
-                            itemBuilder: (context, index) {
-                              MessageModel currentMessage =
-                                  MessageModel.fromMap(dataSnapshot.docs[index]
-                                      .data() as Map<String, dynamic>);
+                        return ListView.builder(
+                          reverse: true,
+                          // shrinkWrap: true,
+                          physics: BouncingScrollPhysics(),
+                          itemCount: dataSnapshot.docs.length,
+                          itemBuilder: (context, index) {
+                            MessageModel currentMessage = MessageModel.fromMap(
+                                dataSnapshot.docs[index].data()
+                                    as Map<String, dynamic>);
 
+<<<<<<< HEAD
                               return Row(
                                 mainAxisAlignment:
                                     (currentMessage.sender == widget.userm.uid)
@@ -126,18 +129,43 @@ class _ChatroomState extends State<Chatroom> {
                                       style: TextStyle(
                                         color: Color.fromARGB(255, 235, 43, 43),
                                       ),
+=======
+                            return Row(
+                              mainAxisAlignment:
+                                  (currentMessage.sender == widget.userm.uid)
+                                      ? MainAxisAlignment.end
+                                      : MainAxisAlignment.start,
+                              children: [
+                                Container(
+                                  margin: EdgeInsets.symmetric(vertical: 2),
+                                  padding: EdgeInsets.symmetric(
+                                      vertical: 10, horizontal: 10),
+                                  decoration: BoxDecoration(
+                                    color: (currentMessage.sender ==
+                                            widget.userm.uid)
+                                        ? Colors.grey
+                                        : Colors.amber,
+                                    borderRadius: BorderRadius.circular(5),
+                                  ),
+                                  child: Text(
+                                    currentMessage.text.toString(),
+                                    style: TextStyle(
+                                      color: Color.fromARGB(255, 235, 43, 43),
+>>>>>>> 4d712cb3003d52253f73a246a237b96810ce7c00
                                     ),
                                   ),
-                                ],
-                              );
-                            },
-                          );
-                        } else {
-                          return Text('No data available');
-                        }
+                                ),
+                              ],
+                            );
+                          },
+                        );
                       } else {
-                        return Center(child: CircularProgressIndicator());
+                        return Text('No data available');
                       }
+                      // }
+                      // else{
+                      //   return Center(child: CircularProgressIndicator());
+                      // }
                     },
                   ),
                 ),
@@ -149,7 +177,7 @@ class _ChatroomState extends State<Chatroom> {
                 alignment: Alignment.bottomCenter,
                 child: Container(
                   height: 60.0,
-                  decoration: BoxDecoration(
+                  decoration: const BoxDecoration(
                     borderRadius: BorderRadius.only(
                         topLeft: Radius.circular(15.0),
                         topRight: Radius.circular(15.0)),
@@ -157,23 +185,16 @@ class _ChatroomState extends State<Chatroom> {
                   child: Row(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
-                      Container(
-                        width: MediaQuery.of(context).size.width * .9,
+                      SizedBox(
+                        width: MediaQuery.of(context).size.width * .85,
                         height: MediaQuery.of(context).size.height * .1,
                         child: TextFormField(
                           cursorColor: Colors.green,
                           autocorrect: true,
                           controller: msgcontrol,
                           textAlign: TextAlign.start,
-                          validator: (value) {
-                            // if (msgcontrol.text.length > 0) {
-                            //   setState(() {
-                            //     _isTextFilled = true;
-                            //   });
-                            // }
-                          },
                           decoration: InputDecoration(
-                            labelStyle: TextStyle(
+                            labelStyle: const TextStyle(
                                 color: Color.fromARGB(255, 81, 187, 104)),
                             labelText: "enter message",
                             suffixIcon: _isTextFilled
@@ -200,12 +221,12 @@ class _ChatroomState extends State<Chatroom> {
                         ),
                       ),
                       IconButton(
-                        color: Color.fromARGB(255, 48, 220, 53),
+                        color: const Color.fromARGB(255, 48, 220, 53),
                         onPressed: () {},
-                        icon: Icon(Icons.attach_file),
+                        icon: const Icon(Icons.attach_file),
                       ),
 
-                      SizedBox(width: 4),
+                      const SizedBox(width: 4),
                       // if(tcontroller.text!=null)
                     ],
                   ),

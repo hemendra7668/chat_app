@@ -131,7 +131,7 @@ class _HomeState extends State<Home> {
                 child: StreamBuilder(
                   stream: FirebaseFirestore.instance
                       .collection("users")
-                      .where("email", isGreaterThanOrEqualTo: name.text)
+                      .where("email", isEqualTo: name.text)
                       // .where("email", isNotEqualTo: Widget.Usermode.email)
                       .snapshots(),
                   builder: (context, snapshot) {
