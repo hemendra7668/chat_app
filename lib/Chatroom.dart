@@ -106,7 +106,7 @@ class _ChatroomState extends State<Chatroom> {
                                 dataSnapshot.docs[index].data()
                                     as Map<String, dynamic>);
 
-<<<<<<< HEAD
+
                               return Row(
                                 mainAxisAlignment:
                                     (currentMessage.sender == widget.userm.uid)
@@ -129,7 +129,7 @@ class _ChatroomState extends State<Chatroom> {
                                       style: TextStyle(
                                         color: Color.fromARGB(255, 235, 43, 43),
                                       ),
-=======
+
                             return Row(
                               mainAxisAlignment:
                                   (currentMessage.sender == widget.userm.uid)
@@ -151,7 +151,6 @@ class _ChatroomState extends State<Chatroom> {
                                     currentMessage.text.toString(),
                                     style: TextStyle(
                                       color: Color.fromARGB(255, 235, 43, 43),
->>>>>>> 4d712cb3003d52253f73a246a237b96810ce7c00
                                     ),
                                   ),
                                 ),
