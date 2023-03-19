@@ -124,7 +124,7 @@ class _ChatroomState extends State<Chatroom> {
                                   ),
                                   child: Text(
                                     currentMessage.text.toString(),
-                                    style: TextStyle(
+                                    style: const TextStyle(
                                       color: Color.fromARGB(255, 235, 43, 43),
                                     ),
                                   ),
